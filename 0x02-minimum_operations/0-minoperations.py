@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 """
-Module for calculating the minimum number of operations to get n H characters.
+Module for calculating the minimum number of operations to get
+n H characters.
 """
 
 
