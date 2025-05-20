@@ -19,6 +19,3 @@ print(validUTF8(data))  # Output: True
 ## Requirements
 - Python 3.4.3+
 - All files are executable and PEP 8 compliant.
-
-## Author
-- Project for ALX Interview Preparation
