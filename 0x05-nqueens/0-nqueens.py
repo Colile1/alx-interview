@@ -6,34 +6,27 @@ import sys
 
 
 def solve_nqueens(N):
-    def backtrack(row, queens, diagonals, anti_diagonals, cols):
-        if row == N:
-            result.append([[i, queens[i]] for i in range(N)])
-            return
+    solutions = [[]]
+    for row in range(N):
+        solutions = place_queen(row, N, solutions)
 
+    return solutions
+
+
+def place_queen(row, N, prev_solutions):
+    new_solutions = []
+    for solution in prev_solutions:
         for col in range(N):
-            curr_diagonal = row - col
-            curr_anti_diagonal = row + col
-            
-            if (col not in cols and 
-                curr_diagonal not in diagonals and 
-                curr_anti_diagonal not in anti_diagonals):
-                
-                queens[row] = col
-                cols.add(col)
-                diagonals.add(curr_diagonal)
-                anti_diagonals.add(curr_anti_diagonal)
-                
-                backtrack(row + 1, queens, diagonals, anti_diagonals, cols)
-                
-                cols.remove(col)
-                diagonals.remove(curr_diagonal)
-                anti_diagonals.remove(curr_anti_diagonal)
+            if is_safe(row, col, solution):
+                new_solutions.append(solution + [col])
+    return new_solutions
 
-    result = []
-    queens = [0] * N
-    backtrack(0, queens, set(), set(), set())
-    return result
+
+def is_safe(row, col, solution):
+    for r, c in enumerate(solution):
+        if c == col or abs(row - r) == abs(col - c):
+            return False
+    return True
 
 
 def main():
@@ -51,7 +44,7 @@ def main():
 
     solutions = solve_nqueens(N)
     for solution in solutions:
-        print(solution)
+        print([[i, col] for i, col in enumerate(solution)])
 
 
 if __name__ == '__main__':
