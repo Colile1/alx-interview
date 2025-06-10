@@ -1,78 +1,51 @@
 #!/usr/bin/python3
+"""
+Solves the N queens problem.
+"""
 import sys
 
 
-def solve_n_queens(n, row, board, solutions):
-    """
-    Recursively solves the N-queens problem using backtracking.
+def solve_nqueens(N):
+    solutions = [[]]
+    for row in range(N):
+        solutions = place_queen(row, N, solutions)
 
-    Args:
-        n (int): The size of the chessboard.
-        row (int): The current row being considered for placing a queen.
-        board (list): A list of [row, col] pairs representing
-        the placement of queens.
-        solutions (list): A list to store all valid board configurations.
-    """
-    if row == n:
-        # All queens have been placed successfully, add this solution
-        solutions.append([list(queen) for queen in board])
-        return
-
-    for col in range(n):
-        if is_safe(row, col, board):
-            # Place the queen and move to the next row
-            board.append([row, col])
-            solve_n_queens(n, row + 1, board, solutions)
-            # Backtrack: Remove the queen to try other possibilities
-            board.pop()
+    return solutions
 
 
-def is_safe(current_row, current_col, board):
-    """
-    Checks if placing a queen at (current_row, current_col) is safe.
+def place_queen(row, N, prev_solutions):
+    new_solutions = []
+    for solution in prev_solutions:
+        for col in range(N):
+            if is_safe(row, col, solution):
+                new_solutions.append(solution + [col])
+    return new_solutions
 
-    Args:
-        current_row (int): The row for the potential queen placement.
-        current_col (int): The column for the potential queen placement.
-        board (list): The current placement of queens.
 
-    Returns:
-        bool: True if safe, False otherwise.
-    """
-    for r, c in board:
-        # Check for same column
-        if c == current_col:
-            return False
-        # Check for diagonals (abs(row_diff) == abs(col_diff))
-        if abs(r - current_row) == abs(c - current_col):
+def is_safe(row, col, solution):
+    for r, c in enumerate(solution):
+        if c == col or abs(row - r) == abs(col - c):
             return False
     return True
 
 
 def main():
-    """
-    Main function to parse arguments and initiate the N-queens solver.
-    """
     if len(sys.argv) != 2:
         print("Usage: nqueens N")
         sys.exit(1)
-
     try:
-        n = int(sys.argv[1])
+        N = int(sys.argv[1])
+        if N < 4:
+            print("N must be at least 4")
+            sys.exit(1)
     except ValueError:
         print("N must be a number")
         sys.exit(1)
 
-    if n < 4:
-        print("N must be at least 4")
-        sys.exit(1)
-
-    solutions = []
-    solve_n_queens(n, 0, [], solutions)
-
+    solutions = solve_nqueens(N)
     for solution in solutions:
-        print(solution)
+        print([[i, col] for i, col in enumerate(solution)])
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     main()
